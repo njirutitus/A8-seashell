@@ -18,7 +18,7 @@
 #include <strings.h>
 
 int main() {
-  struct biggie *big = biggie_create("386321");
+  struct biggie *big = biggie_create("986321");
   struct biggie *big1 = biggie_create("344321");
   biggie_add(big,big1);
   biggie_print(big,true);
@@ -110,6 +110,9 @@ void biggie_add(struct biggie *n, const struct biggie *m) {
   int carry = 0;
   int sum = 0;
   int digit;
+  
+  if (max_length > lenn) n->digits = realloc(n->digits, max_length * sizeof(char *));
+
   for ( int i = 0 ; i < max_length ; i++) {
     if ( lenn >= i && lenm >= i)
       sum = (n->digits[i] - '0') + (m->digits[i] - '0');
@@ -122,9 +125,15 @@ void biggie_add(struct biggie *n, const struct biggie *m) {
     carry = ( sum - carry ) / 10;
     n->digits[i] = digit + '0';
   }
+
+  if (carry > 0) {
+    n->digits[max_length] = carry + '0';
+  }
+
 }
 
 void biggie_sub(struct biggie *n, const struct biggie *m) {
+  
 }
 
 void biggie_mult(struct biggie *n, const struct biggie *m) {
