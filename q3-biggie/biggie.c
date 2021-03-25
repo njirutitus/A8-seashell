@@ -18,12 +18,14 @@
 #include <strings.h>
 
 int main() {
-  struct biggie *big = biggie_create("501");
-  struct biggie *big1 = biggie_create("501");
+  struct biggie *big = biggie_create("200");
+  struct biggie *big1 = biggie_create("50");
   // biggie_add(big,big1);
   // biggie_print(big,true);
-  biggie_mult(big,big1);
+  biggie_sub(big,big1);
   biggie_print(big,true);
+  // biggie_mult(big,big1);
+  // biggie_print(big,true);
   biggie_destroy(big);
   biggie_destroy(big1);
   return 0;
@@ -138,37 +140,40 @@ void biggie_add(struct biggie *n, const struct biggie *m) {
 }
 
 void biggie_sub(struct biggie *n, const struct biggie *m) {
-  int lenn = strlen(n->digits);
-  int lenm = strlen(m->digits);
-  int max_length = lenn > lenm ? lenn : lenm;
+  int len1= strlen(n->digits);
+  int len2= strlen(m->digits);
+  int max_length = len1 > len2 ? len1: len2;
+  int sub1 = 0;
+  int sub2 = 0;
+  int subfrom = 0;
   int borrow = 0;
-  int diff = 0;
-  int digit;
-  int num1, num2;
-  
-  if (max_length > lenn) n->digits = realloc(n->digits, max_length * sizeof(char *));
+  int calc = 0;
+  if(n->negative == true && m->negative == false){
+    n->negative = false;
+    biggie_add(n, m);
+   n->negative = true;
+    
+  }else if(n->negative == false && m->negative == true){
+    struct biggie *big;
+    big = biggie_copy(m);
+    big->negative = false;
+    
+    biggie_add(n , big);
+  }
 
-  for ( int i = 0 ; i < max_length ; i++) {
-    if ( lenn >= i && lenm >= i) {
-      num1 = (n->digits[i] - '0');
-      num2 = (m->digits[i] - '0');
-      if(num1 > num2) {
-        borrow = 1;
-        diff = 10 + num1 - num2;
-      }
-      else {
-        diff = num1 - num2;
-      }
+  for (int i = 0; i<max_length; i++){
+    sub1 = n->digits[i] - '0';
+    sub2 = m->digits[i] - '0';
+    subfrom = sub1 - borrow;
+    calc = subfrom - sub2;
+    if(calc < 0){
+      subfrom = 10 + subfrom;
+      calc = subfrom - sub2;
+      borrow = 1;
     }
+    n->digits[i] =calc + '0';
 
-    else if (lenm >= i)  {
-      num2 =  (m->digits[i] - '0');
-    }
-    else {
-      num1 = n->digits[i] - '0';
-      diff = num1;
 
-    }
   }
   
 }
