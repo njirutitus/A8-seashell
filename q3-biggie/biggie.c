@@ -18,14 +18,14 @@
 #include <strings.h>
 
 int main() {
-  struct biggie *big = biggie_create("200");
-  struct biggie *big1 = biggie_create("50");
+  struct biggie *big = biggie_create("5");
+  struct biggie *big1 = biggie_create("6");
   // biggie_add(big,big1);
   // biggie_print(big,true);
-  biggie_sub(big,big1);
-  biggie_print(big,true);
-  // biggie_mult(big,big1);
+  // biggie_sub(big,big1);
   // biggie_print(big,true);
+  biggie_mult(big,big1);
+  biggie_print(big,true);
   biggie_destroy(big);
   biggie_destroy(big1);
   return 0;
@@ -154,11 +154,8 @@ void biggie_sub(struct biggie *n, const struct biggie *m) {
    n->negative = true;
     
   }else if(n->negative == false && m->negative == true){
-    struct biggie *big;
-    big = biggie_copy(m);
-    big->negative = false;
-    
-    biggie_add(n , big);
+    n->negative = false;
+    biggie_add(n , m);
   }
 
   for (int i = 0; i<max_length; i++){
@@ -187,7 +184,7 @@ void biggie_mult(struct biggie *n, const struct biggie *m) {
   // positions
   int i_n1 = 0;
   int i_n2 = 0;
-  int *results = malloc((len1+len2)*sizeof(int));
+  int results[len1+len2];
 
   n->digits = realloc(n->digits, (len1+len2) * sizeof(char));
 
@@ -203,14 +200,12 @@ void biggie_mult(struct biggie *n, const struct biggie *m) {
       // Multiply with current digit of first number
       // and add result to previously stored result
       // at current position. 
-      int sum = n1*n2 + results[i_n1 + i_n2] + carry;
+      int sum = n1*n2 + results[i_n1 + i_n2] + carry;;
     
       // Carry for next iteration
       carry = sum/10;
       // Store result
       results[i_n1 + i_n2] = sum % 10;
-
-    printf("results %d: %d\n",i_n1 + i_n2,results[i_n1 + i_n2]);
 
 
       i_n2++;
@@ -237,11 +232,10 @@ void biggie_mult(struct biggie *n, const struct biggie *m) {
    n->digits[0] = '0';
   }
 
-  for (int count = 0; count < i; count++)
-		n->digits[i] = results[count] + '0';
+  for (int count = 0; count < i; count++) {
+		n->digits[count] = results[count] + '0';
+  }
   
-  free(results);
-  n->digits[i] = '\0';
 }
 
 bool biggie_eq(const struct biggie *n, const struct biggie *m) {
