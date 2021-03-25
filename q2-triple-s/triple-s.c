@@ -21,11 +21,11 @@
 void merge_sort( char *a[], int len);
 void merge(char *dest[], const char *src1[], int len1, const char *src2[], int len2);
 
-int main() {
-    struct triple_s *sss = sss_create();
-    sss_destroy(sss);
+// int main() {
+//     struct triple_s *sss = sss_create();
+//     sss_destroy(sss);
     
-}
+// }
 
 struct triple_s{
     int len;
@@ -135,7 +135,6 @@ int sss_search(const struct triple_s *sss, const char *s) {
         if ( strcmp(sss->aos[i],s) == 0) {
             return i;
         }
-
     }
 
     return -1;
@@ -148,7 +147,7 @@ int sss_search(const struct triple_s *sss, const char *s) {
 // time: O(1)
 const char *sss_get(const struct triple_s *sss, int idx) {
     char *s;
-    s = &sss->aos[idx];
+    s = sss->aos[idx];
     return s;
 }
 
