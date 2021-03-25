@@ -123,6 +123,12 @@ const char *sss_get(const struct triple_s *sss, int idx) {
 
 }
 
+// merge(dest, src1, len1, src2, len2) modifies dest to contain
+// the elements from both src1 and src2 in sorted order
+// requires: length of dest is at least (len1 + len2)
+// src1 and src2 are sorted [not asserted]
+// effects: modifies dest
+// time: O(n), where n is len1 + len2
 void merge(char **dest, const char **src1, int len1,
     const char **src2, int len2) {
     int pos1 = 0;
@@ -137,6 +143,8 @@ void merge(char **dest, const char **src1, int len1,
         }
     }
 }
+
+
 
 void merge_sort( char **a, int len) {
     if (len <= 1) return;
