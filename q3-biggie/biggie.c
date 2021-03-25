@@ -18,8 +18,12 @@
 #include <strings.h>
 
 int main() {
-  struct biggie *big = biggie_create("-345678f");
+  struct biggie *big = biggie_create("386321");
+  struct biggie *big1 = biggie_create("344321");
+  biggie_add(big,big1);
   biggie_print(big,true);
+  biggie_destroy(big);
+  biggie_destroy(big1);
   return 0;
 }
 
@@ -100,6 +104,24 @@ void biggie_print(const struct biggie *big, bool newline) {
 }
 
 void biggie_add(struct biggie *n, const struct biggie *m) {
+  int lenn = strlen(n->digits);
+  int lenm = strlen(m->digits);
+  int max_length = lenn > lenm ? lenn : lenm;
+  int carry = 0;
+  int sum = 0;
+  int digit;
+  for ( int i = 0 ; i < max_length ; i++) {
+    if ( lenn >= i && lenm >= i)
+      sum = (n->digits[i] - '0') + (m->digits[i] - '0');
+    else if (lenm >= i) 
+      sum = m->digits[i] - '0';
+    else
+       sum = n->digits[i] - '0';
+    sum = sum + carry;
+    digit = sum % 10;
+    carry = ( sum - carry ) / 10;
+    n->digits[i] = digit + '0';
+  }
 }
 
 void biggie_sub(struct biggie *n, const struct biggie *m) {
