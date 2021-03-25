@@ -12,11 +12,18 @@
 // Name: ERROR_NO_NAME 
 // login ID: ERROR_NO_LOGIN 
 /////////////////////////////////////////////////////////////////////////////
-
+#include <stdio.h>
 #include <stdlib.h>
 #include "biggie.h"
+#include <strings.h>
 
-/////////////////////////////////////////////////////////////////////////////
+int main() {
+  struct biggie *big = biggie_create("-345678f");
+  biggie_print(big,true);
+  return 0;
+}
+
+////////////////////////////////////////////////////////////////////////
 // DO NOT CHANGE THIS STRUCTURE
 /////////////////////////////////////////////////////////////////////////////
 struct biggie {
@@ -30,13 +37,66 @@ struct biggie {
 /////////////////////////////////////////////////////////////////////////////
 
 struct biggie *biggie_create(const char *s) {
-  return NULL; // dummy value
+  struct biggie *big = malloc(sizeof(struct biggie));
+  // char *str = s;
+  int len = strlen(s);
+
+  // check if it contains non digit characters
+  for (int i = 0; i < len; i++) {
+    if (i == 0 && s[i] == '-') continue;
+    if (s[i] < 48 || s[i] > 57 ) {
+        return NULL;
+    }
+  }
+
+  // check if is not negative and contains a leading zero
+  if (s[0] != '-' && s[0] == '0' && len > 1 ) {
+    return NULL;
+  }
+
+  // check if negative and contains a leading zero
+  if (s[0] == '-' && s[1] == '0') {
+    return NULL;
+  }
+
+  // check if empty
+  if(len < 1) return NULL;
+  
+  if (s[0] == '-') {
+    big->negative = true;
+    big->digits = malloc(len-1*sizeof(char));
+    for (int i = 1; i < len; i++) {
+      big->digits[i-1] = s[len-i];
+    }
+  }  
+  else {
+    big->negative = false;
+    big->digits = malloc(len*sizeof(char));
+    for (int i = 0; i < len; i++) {
+      big->digits[i] = s[len-i-1];
+    }
+  }
+
+  return big;
+
 }
 
 void biggie_destroy(struct biggie *big) {
+  free(big->digits);
+  free(big);
 }
 
+// biggie_print() prints the biggie to output followed by
+//   an optional newline (trailing \n is printed if newline is true)
+// effects: prints output
+// time: O(logn)
 void biggie_print(const struct biggie *big, bool newline) {
+  if (newline) {
+    printf("%s\n",big->digits);
+  }
+  else {
+    printf("%s",big->digits);
+  }  
 }
 
 void biggie_add(struct biggie *n, const struct biggie *m) {
