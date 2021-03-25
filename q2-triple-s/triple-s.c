@@ -147,7 +147,9 @@ int sss_search(const struct triple_s *sss, const char *s) {
 // requires: 0 <= idx < sss_count(sss)
 // time: O(1)
 const char *sss_get(const struct triple_s *sss, int idx) {
-
+    char *s;
+    s = &sss->aos[idx];
+    return s;
 }
 
 // merge(dest, src1, len1, src2, len2) modifies dest to contain
