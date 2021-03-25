@@ -99,12 +99,28 @@ void sss_add_follows(struct triple_s *sss, const char *s) {
 void sss_remove(struct triple_s *sss, const char *s) {
     assert(sss);
     assert(sss->len);
-    sss->len -= 1;
+    int len = sss->len;
+    struct triple_s *temp = sss;
+    char *str;
+    strcpy(str,s);
+    int count = 0;
+    for (int i = 0 ; i <= len; i++) {
+        if ( strcmp(sss->aos[i],str) != 0) {
+            count++;
+            temp->aos = realloc(temp->aos, count * sizeof(char *));
+            temp->aos[count] = sss->aos[i];
+        }
+
+    }
+    sss = temp;
+    
 }
 
 // sss_count(sss) gets the number of strings in sss
 // time: O(1)
 int sss_count(const struct triple_s *sss) {
+    int count = sizeof(sss->aos)/sizeof(char *);
+    return count;
 
 }
 
@@ -112,7 +128,18 @@ int sss_count(const struct triple_s *sss) {
 // note: returns -1 if s does not appear in the sss
 // time: O(m*logn)
 int sss_search(const struct triple_s *sss, const char *s) {
+    assert(sss);
+    assert(sss->len);
+    int len = sss->len;
+    for (int i = 0 ; i <= len; i++) {
+        if ( strcmp(sss->aos[i],s) == 0) {
+            return i;
+        }
 
+    }
+
+    return -1;
+    
 }
 
 // sss_get(sss, idx) retrieves a pointer to the string in sss
